@@ -1,0 +1,1 @@
+dyn_miner http://192.168.1.62:6433 user 123456 dy1qacvcz4qmfw39va0r02rghs7vky68l3pvkvwau8 GPU 10
