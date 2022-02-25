@@ -1,4 +1,4 @@
-#define VERSION 3.00
+#define VERSION 3.01
 #ifndef uint32_t
 #define uint32_t unsigned int
 #endif
@@ -631,6 +631,7 @@ __kernel void dyn_hash (__global uint* byteCode, __global uint* hashResult, __gl
         if (get_global_id(0) != 0)
             return;
 
+        /*
         unsigned char* hh = myHeader;
         for (int i = 0; i < 80; i++)
             printf("%02X", hh[i]);
@@ -663,7 +664,7 @@ __kernel void dyn_hash (__global uint* byteCode, __global uint* hashResult, __gl
                     myHashResult[6],
                     myHashResult[7]
                     );
-                    */
+                  */  
 
                 if (byteCode[linePtr] == HASHOP_ADD) {
                     linePtr++;
@@ -863,13 +864,92 @@ __kernel void dyn_hash (__global uint* byteCode, __global uint* hashResult, __gl
 
         }
 		
+
+
+        /*
+        uint test[8];
+        for (int ii = 0; ii < 8; ii++)
+            test[ii] = endianSwap(myHashResult[ii]);
+
+        uint c = CLZz(test[0]);
+        if (c == 32) {
+            c += CLZz(test[1]);
+            if (c == 64) {
+                c += CLZz(test[2]);
+                if (c == 96) {
+                    c += CLZz(test[3]);
+                    if (c == 128) {
+                        c += CLZz(test[4]);
+                        if (c == 160) {
+                            c += CLZz(test[5]);
+                            if (c == 192) {
+                                c += CLZz(test[6]);
+                                if (c == 224) {
+                                    c += CLZz(test[7]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (c > target) {
+            
+            /*
+            __global unsigned char* ptr = &myHeader;
+
+            printf("Header %02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+                ptr[0], ptr[1], ptr[2], ptr[3], ptr[4], ptr[5], ptr[6], ptr[7], ptr[8], ptr[9],
+                ptr[10], ptr[11], ptr[12], ptr[13], ptr[14], ptr[15], ptr[16], ptr[17], ptr[18], ptr[19],
+                ptr[20], ptr[21], ptr[22], ptr[23], ptr[24], ptr[25], ptr[26], ptr[27], ptr[28], ptr[29],
+                ptr[30], ptr[31], ptr[32], ptr[33], ptr[34], ptr[35], ptr[36], ptr[37], ptr[38], ptr[39],
+                ptr[40], ptr[41], ptr[42], ptr[43], ptr[44], ptr[45], ptr[46], ptr[47], ptr[48], ptr[49],
+                ptr[50], ptr[51], ptr[52], ptr[53], ptr[54], ptr[55], ptr[56], ptr[57], ptr[58], ptr[59],
+                ptr[60], ptr[61], ptr[62], ptr[63], ptr[64], ptr[65], ptr[66], ptr[67], ptr[68], ptr[69],
+                ptr[70], ptr[71], ptr[72], ptr[73], ptr[74], ptr[75], ptr[76], ptr[77], ptr[78], ptr[79]
+                );
+                
+
+            printf("GPU HASH %08X%08X%08X%08X%08X%08X%08X%08X",
+                myHashResult[0],
+                myHashResult[1],
+                myHashResult[2],
+                myHashResult[3],
+                myHashResult[4],
+                myHashResult[5],
+                myHashResult[6],
+                myHashResult[7]
+            );
+            
+
+            NonceRetBuf[atomic_inc(NonceRetBuf + 0xFF)] = nonce;
+            break;
+        }
+        */
         
         ulong res = as_ulong(as_uchar8(((ulong *)myHashResult)[0]).s76543210);
 		if(res <= target)
 		{
+
+            /*
+            printf("GPU HASH %08X%08X%08X%08X%08X%08X%08X%08X",
+                myHashResult[0],
+                myHashResult[1],
+                myHashResult[2],
+                myHashResult[3],
+                myHashResult[4],
+                myHashResult[5],
+                myHashResult[6],
+                myHashResult[7]
+                );
+              */
+
 			NonceRetBuf[atomic_inc(NonceRetBuf + 0xFF)] = nonce;
 			break;	// we are solo mining, any other solutions will go to waste anyhow
 		}
+        
 		
         hashCount++;
         nonce++;
